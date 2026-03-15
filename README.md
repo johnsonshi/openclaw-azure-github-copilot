@@ -211,27 +211,11 @@ Follow the rest of the OpenClaw onboarding steps, such as onboarding it to a mes
 After setting up OpenClaw, you can run the following in the **same Azure Bastion SSH VM shell** to verify the setup:
 
 ```bash
-node -v
-npm -v
 openclaw --version
 openclaw gateway status
+openclaw doctor
 openclaw logs --limit 200
 ```
-
-### OpenClaw Control UI Access
-
-Create a local Azure Bastion tunnel to securely reach the VM's OpenClaw UI port without public exposure.
-
-```bash
-az network bastion tunnel \
-  --name "${BASTION_NAME}" \
-  --resource-group "${RG}" \
-  --target-resource-id "${VM_ID}" \
-  --resource-port 18789 \
-  --port 18789
-```
-
-Then browse to `http://127.0.0.1:18789`.
 
 ## Operations
 
