@@ -214,11 +214,15 @@
       "apiVersion": "2023-11-01",
       "name": "[parameters('bastionName')]",
       "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard"
+      },
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('bastionPublicIpName'))]"
       ],
       "properties": {
+        "enableTunneling": true,
         "ipConfigurations": [
           {
             "name": "bastionIpConfig",

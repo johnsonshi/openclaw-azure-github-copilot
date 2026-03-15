@@ -13,7 +13,7 @@ This implementation is designed for enterprise Azure environments that typically
 1. A single Azure resource group containing all resources.
 2. Network:
    - VNet + VM subnet.
-   - Azure Bastion host + Azure Bastion subnet.
+   - Azure Bastion Standard host with native client tunneling enabled + Azure Bastion subnet.
    - Network Security Group (NSG) policy:
      - deny SSH from Internet
      - deny SSH from VirtualNetwork
@@ -42,6 +42,12 @@ This implementation is designed for enterprise Azure environments that typically
 ```bash
 az login
 az account show -o table
+```
+
+### Azure CLI SSH Extension
+
+```bash
+az extension add -n ssh
 ```
 
 ### Azure Resource Provider Registration
@@ -124,7 +130,7 @@ az deployment group create \
 
 ## Setup OpenClaw on Azure VM
 
-### Set Runtime Variables
+### Set Post-Deployment Variables
 
 ```bash
 RG="rg-openclaw"
@@ -168,7 +174,25 @@ Configure OpenClaw in the **same Azure Bastion SSH VM shell**:
 openclaw onboard --install-daemon
 ```
 
-Authenticate OpenClaw with GitHub Copilot. You’ll be prompted to visit a URL and enter a one-time code. Keep the terminal open until it completes.
+During onboarding wizard, use:
+
+1. Continue security prompt: `Yes`
+2. Onboarding mode: `QuickStart`
+3. Model/auth provider: `Copilot`
+4. Copilot auth method: `GitHub Copilot (GitHub device login)`
+
+QuickStart selections expected:
+
+1. Gateway port: `18789`
+2. Gateway bind: `Loopback (127.0.0.1)`
+3. Gateway auth: `Token (default)`
+4. Tailscale exposure: `Off`
+5. Channel mode: `Direct to chat channels`
+
+After selecting Copilot device login, OpenClaw will print a device code and prompt you to authorize at `https://github.com/login/device`.
+Keep the VM shell open while completing device authorization.
+
+You can run provider auth directly as well:
 
 ```bash
 openclaw models auth login-github-copilot
