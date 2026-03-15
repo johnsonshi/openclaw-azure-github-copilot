@@ -168,13 +168,13 @@ az network bastion ssh \
 
 ### OpenClaw Configuration (Provider / Model)
 
-Configure OpenClaw in the **same Azure Bastion SSH VM shell**:
+Configure OpenClaw in the **same Azure Bastion SSH VM shell** by running the onboarding flow:
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-During onboarding wizard, use:
+In the onboarding wizard, use:
 
 1. Continue security prompt: `Yes`
 2. Onboarding mode: `QuickStart`
@@ -192,35 +192,23 @@ QuickStart selections expected:
 After selecting Copilot device login, OpenClaw will print a device code and prompt you to authorize at `https://github.com/login/device`.
 Keep the VM shell open while completing device authorization.
 
-You can run provider auth directly as well:
+Expected auth completion output:
 
-```bash
-openclaw models auth login-github-copilot
-```
+1. `GitHub access token acquired`
+2. `Updated ~/.openclaw/openclaw.json`
+3. `Auth profile: github-copilot:github (github-copilot/token)`
 
-Set a default model:
+Expected model selection behavior:
 
-```bash
-openclaw models set github-copilot/<model-id>
-```
+1. OpenClaw sets an initial default model (for example: `github-copilot/gpt-4o`).
+2. At `Default model`, choose `Keep current (github-copilot/gpt-4o)` or select another model from the wizard list.
+3. If your Copilot plan does not allow the selected model, choose a different option from the same wizard menu.
 
-`model-id` guidance:
-
-1. Example: `openclaw models set github-copilot/gpt-5.4`
-2. You can also try various OpenClaw-supported model ids by running:
-
-```bash
-openclaw models list
-```
-
-3. If rejected for your Copilot plan, try another supported model id or contact your Copilot plan admin.
-
-For more information on authenticating OpenClaw with the GitHub Copilot Provider:
-`https://docs.openclaw.ai/providers/github-copilot`
+Follow the rest of the OpenClaw onboarding steps, such as onboarding it to a messaging app so you can chat with it on the go (recommended: [Telegram onboarding](https://docs.openclaw.ai/channels/telegram)), giving it search APIs, and installing skills.
 
 ### OpenClaw Runtime Validation
 
-Run the following in the **same Azure Bastion SSH VM shell**:
+After setting up OpenClaw, you can run the following in the **same Azure Bastion SSH VM shell** to verify the setup:
 
 ```bash
 node -v
@@ -249,7 +237,7 @@ Then browse to `http://127.0.0.1:18789`.
 
 Before running the commands in this section, connect to the VM using [Connect to VM Through Azure Bastion (SSH)](#connect-to-vm-through-azure-bastion-ssh).
 
-### OS Patching
+### VM OS Patching
 
 ```bash
 sudo apt-get update
@@ -273,3 +261,34 @@ sudo npm install -g openclaw@<target-version>
 sudo npm install -g openclaw@<previous-known-good-version>
 openclaw gateway restart
 ```
+
+### OpenClaw Model Management
+
+Run these in the **same Azure Bastion SSH VM shell** when you want to re-authenticate or change models.
+
+#### Re-authenticate GitHub Copilot
+
+```bash
+openclaw models auth login-github-copilot
+```
+
+#### List Available Models
+
+```bash
+openclaw models list
+```
+
+#### Change Default Model
+
+```bash
+openclaw models set github-copilot/<model-id>
+```
+
+Examples:
+
+1. `openclaw models set github-copilot/gpt-4o`
+2. `openclaw models set github-copilot/gpt-5.4`
+
+If a model is rejected by your Copilot plan, choose another from `openclaw models list`.
+
+For more information on the GitHub Copilot model provider: `https://docs.openclaw.ai/providers/github-copilot`
