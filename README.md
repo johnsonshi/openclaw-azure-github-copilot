@@ -61,8 +61,8 @@ az provider show --namespace Microsoft.Network --query registrationState -o tsv
 ```bash
 RG="rg-openclaw"
 LOCATION="westus2"
-TEMPLATE="infra/azuredeploy.json"
-PARAMS="infra/azuredeploy.parameters.json"
+TEMPLATE_URI="https://raw.githubusercontent.com/johnsonshi/openclaw-azure-github-copilot/main/infra/azuredeploy.json"
+PARAMS_URI="https://raw.githubusercontent.com/johnsonshi/openclaw-azure-github-copilot/main/infra/azuredeploy.parameters.json"
 SSH_PUB_KEY="$(cat ~/.ssh/id_ed25519.pub)"
 ```
 
@@ -77,15 +77,15 @@ az group create -n "${RG}" -l "${LOCATION}"
 ```bash
 az deployment group validate \
   -g "${RG}" \
-  -f "${TEMPLATE}" \
-  -p @"${PARAMS}" \
-  -p sshPublicKey="${SSH_PUB_KEY}"
+  --template-uri "${TEMPLATE_URI}" \
+  --parameters "${PARAMS_URI}" \
+  --parameters sshPublicKey="${SSH_PUB_KEY}"
 
 az deployment group what-if \
   -g "${RG}" \
-  -f "${TEMPLATE}" \
-  -p @"${PARAMS}" \
-  -p sshPublicKey="${SSH_PUB_KEY}"
+  --template-uri "${TEMPLATE_URI}" \
+  --parameters "${PARAMS_URI}" \
+  --parameters sshPublicKey="${SSH_PUB_KEY}"
 ```
 
 ### Create Azure Deployment
@@ -93,9 +93,9 @@ az deployment group what-if \
 ```bash
 az deployment group create \
   -g "${RG}" \
-  -f "${TEMPLATE}" \
-  -p @"${PARAMS}" \
-  -p sshPublicKey="${SSH_PUB_KEY}"
+  --template-uri "${TEMPLATE_URI}" \
+  --parameters "${PARAMS_URI}" \
+  --parameters sshPublicKey="${SSH_PUB_KEY}"
 ```
 
 > [!NOTE]
@@ -104,22 +104,22 @@ az deployment group create \
 ```bash
 az deployment group create \
   -g "${RG}" \
-  -f "${TEMPLATE}" \
-  -p location="${LOCATION}" \
-  -p vmName="vm-openclaw" \
-  -p vmSize="Standard_B2as_v2" \
-  -p adminUsername="openclaw" \
-  -p sshPublicKey="${SSH_PUB_KEY}" \
-  -p vnetName="vnet-openclaw" \
-  -p vnetAddressPrefix="10.40.0.0/16" \
-  -p vmSubnetName="snet-openclaw-vm" \
-  -p vmSubnetPrefix="10.40.2.0/24" \
-  -p bastionSubnetPrefix="10.40.1.0/26" \
-  -p nsgName="nsg-openclaw-vm" \
-  -p nicName="nic-openclaw-vm" \
-  -p bastionName="bas-openclaw" \
-  -p bastionPublicIpName="pip-openclaw-bastion" \
-  -p osDiskSizeGb=64
+  --template-uri "${TEMPLATE_URI}" \
+  --parameters location="${LOCATION}" \
+  --parameters vmName="vm-openclaw" \
+  --parameters vmSize="Standard_B2as_v2" \
+  --parameters adminUsername="openclaw" \
+  --parameters sshPublicKey="${SSH_PUB_KEY}" \
+  --parameters vnetName="vnet-openclaw" \
+  --parameters vnetAddressPrefix="10.40.0.0/16" \
+  --parameters vmSubnetName="snet-openclaw-vm" \
+  --parameters vmSubnetPrefix="10.40.2.0/24" \
+  --parameters bastionSubnetPrefix="10.40.1.0/26" \
+  --parameters nsgName="nsg-openclaw-vm" \
+  --parameters nicName="nic-openclaw-vm" \
+  --parameters bastionName="bas-openclaw" \
+  --parameters bastionPublicIpName="pip-openclaw-bastion" \
+  --parameters osDiskSizeGb=64
 ```
 
 ## Setup OpenClaw on Azure VM
@@ -143,7 +143,7 @@ az vm run-command invoke \
   -g "${RG}" \
   -n "${VM_NAME}" \
   --command-id RunShellScript \
-  --scripts @scripts/bootstrap-openclaw.sh
+  --scripts "curl -fsSL https://raw.githubusercontent.com/johnsonshi/openclaw-azure-github-copilot/main/scripts/bootstrap-openclaw.sh | bash"
 ```
 
 ### Connect to VM Through Azure Bastion (SSH)
