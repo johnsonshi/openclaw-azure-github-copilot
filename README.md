@@ -22,7 +22,6 @@ This implementation is designed for enterprise Azure environments that typically
 4. Storage: Managed OS disk.
 5. Access pattern:
    - VM admin via Azure Bastion SSH.
-   - OpenClaw UI via Azure Bastion tunnel to local loopback.
 
 ## Repository Contents
 
@@ -71,6 +70,9 @@ TEMPLATE_URI="https://raw.githubusercontent.com/johnsonshi/openclaw-azure-github
 PARAMS_URI="https://raw.githubusercontent.com/johnsonshi/openclaw-azure-github-copilot/main/infra/azuredeploy.parameters.json"
 SSH_PUB_KEY="$(cat ~/.ssh/id_ed25519.pub)"
 ```
+
+> [!IMPORTANT]
+> `infra/azuredeploy.parameters.json` intentionally keeps `sshPublicKey` as a placeholder. Always pass your real key at deploy time (when running `az deployment` commands) using `--parameters sshPublicKey="${SSH_PUB_KEY}"`.
 
 ### Create Azure Resource Group
 
@@ -275,4 +277,4 @@ Examples:
 
 If a model is rejected by your Copilot plan, choose another from `openclaw models list`.
 
-For more information on the GitHub Copilot model provider: `https://docs.openclaw.ai/providers/github-copilot`
+For more information on, please check out the [OpenClaw docs on the GitHub Copilot model provider](https://docs.openclaw.ai/providers/github-copilot).
