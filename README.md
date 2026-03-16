@@ -109,6 +109,7 @@ az deployment group create \
 
 > [!NOTE]
 > You can override any template parameter in the CLI command.
+> You can override the Azure region (location), VM name, VM admin username, SSH public key for accessing the VM via Azure Bastion SSH, VM size, and VM OS disk size.
 
 ```bash
 az deployment group create \
@@ -116,18 +117,9 @@ az deployment group create \
   --template-uri "${TEMPLATE_URI}" \
   --parameters location="${LOCATION}" \
   --parameters vmName="vm-openclaw" \
-  --parameters vmSize="Standard_B2as_v2" \
   --parameters adminUsername="openclaw" \
   --parameters sshPublicKey="${SSH_PUB_KEY}" \
-  --parameters vnetName="vnet-openclaw" \
-  --parameters vnetAddressPrefix="10.40.0.0/16" \
-  --parameters vmSubnetName="snet-openclaw-vm" \
-  --parameters vmSubnetPrefix="10.40.2.0/24" \
-  --parameters bastionSubnetPrefix="10.40.1.0/26" \
-  --parameters nsgName="nsg-openclaw-vm" \
-  --parameters nicName="nic-openclaw-vm" \
-  --parameters bastionName="bas-openclaw" \
-  --parameters bastionPublicIpName="pip-openclaw-bastion" \
+  --parameters vmSize="Standard_B2as_v2" \
   --parameters osDiskSizeGb=64
 ```
 
