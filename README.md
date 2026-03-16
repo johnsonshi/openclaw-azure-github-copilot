@@ -1,12 +1,13 @@
 # OpenClaw on Azure Linux VM with Native GitHub Copilot Provider
 
-Deploy OpenClaw with the native GitHub Copilot provider (`github-copilot`) on a single Azure Linux VM using Azure Resource Manager (ARM) templates, with Azure Bastion-first administration and SSH key-based access.
+Deploy OpenClaw with the native GitHub Copilot provider (`github-copilot`) on a single Azure Linux VM using Azure Resource Manager (ARM) templates, with Azure Bastion-first administration and Azure Bastion SSH key-based access.
 
 This implementation is designed for enterprise Azure environments that typically require:
 
-1. Controlled admin access paths to VM via Azure Bastion SSH (no public SSH exposure).
-2. Repeatable infrastructure deployment via ARM.
-3. Operationally simple single-VM rollout before scaling complexity.
+1. Controlled admin access paths to VM via Azure Bastion SSH.
+2. Network Security Group (NSG) rules that block SSH from the public Internet.
+3. Repeatable infrastructure deployment via ARM.
+4. Operationally simple single-VM rollout before scaling complexity.
 
 ## Architecture
 
@@ -80,7 +81,7 @@ SSH_PUB_KEY="$(cat ~/.ssh/id_ed25519.pub)"
 az group create -n "${RG}" -l "${LOCATION}"
 ```
 
-### Validate and Preview Azure Deployment
+### Preview Azure Deployment
 
 ```bash
 az deployment group validate \
@@ -129,6 +130,12 @@ az deployment group create \
   --parameters bastionPublicIpName="pip-openclaw-bastion" \
   --parameters osDiskSizeGb=64
 ```
+
+### Validate Azure Deployment in Azure Portal
+
+After deployment completes, you can verify the expected resources in the resource group overview in the Azure Portal.
+
+![Azure resource group deployment overview](docs/images/azure-resource-group-overview.png)
 
 ## Setup OpenClaw on Azure VM
 
